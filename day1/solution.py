@@ -12,8 +12,7 @@ with open("input.txt") as f:
 
 total_calories_per_elf.sort()
 highest_total = total_calories_per_elf[-1]
-print(highest_total) # answer 1
+print(highest_total)  # answer 1
 
 top3 = total_calories_per_elf[-3:]
-print(sum(top3)) # answer 2
-
+print(sum(top3))  # answer 2
