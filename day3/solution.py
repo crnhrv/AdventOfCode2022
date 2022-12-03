@@ -22,9 +22,7 @@ def day3_part2_main(rucksacks):
 
 def find_intersection(group):
     uniques = [set(ruck) for ruck in group]
-    intersection = uniques[0] & uniques[0]
-    for unique in uniques:
-        intersection = intersection & unique
+    intersection = set.intersection(*uniques)
     return intersection.pop()
 
 
