@@ -1,4 +1,4 @@
-def day3_part1_main(rucksacks):
+def part1(rucksacks):
     total_priority = 0
     for rucksack in rucksacks:
         container_size = len(rucksack) // 2
@@ -8,7 +8,7 @@ def day3_part1_main(rucksacks):
     return total_priority
 
 
-def day3_part2_main(rucksacks):
+def part2(rucksacks):
     total_priority = 0
     i = 0
 
@@ -40,8 +40,8 @@ def read_input():
 
 if __name__ == "__main__":
     rucksack_data = read_input()
-    answer1 = day3_part1_main(rucksack_data)
-    answer2 = day3_part2_main(rucksack_data)
+    answer1 = part1(rucksack_data)
+    answer2 = part2(rucksack_data)
 
     print(answer1)
     print(answer2)

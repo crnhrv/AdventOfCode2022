@@ -1,4 +1,4 @@
-def day2_part1_main(rounds):
+def part1(rounds):
     move_points = {"X": 1, "Y": 2, "Z": 3}
     key = {"X": "C", "Y": "A", "Z": "B"}
 
@@ -14,7 +14,7 @@ def day2_part1_main(rounds):
     print(total_score)  # answer 1
 
 
-def day2_part2_main(rounds):
+def part2(rounds):
     move_points = {"A": 1, "B": 2, "C": 3}
     key = {"A": "C", "B": "A", "C": "B"}
 
@@ -47,5 +47,5 @@ def read_input():
 
 if __name__ == "__main__":
     rps_data = read_input()
-    day2_part1_main(rps_data)
-    day2_part2_main(rps_data)
+    part1(rps_data)
+    part2(rps_data)
