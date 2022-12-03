@@ -1,3 +1,6 @@
+# solution created by giving the question prompts verbatim to gpt-3
+
+
 def day2_part1_main(rounds):
     # Set the score to 0
     score = 0
