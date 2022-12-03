@@ -30,8 +30,8 @@ def find_intersection(group):
 
 def get_priority(item):
     if item.isupper():
-        return ord(item) - 38
-    return ord(item) - 96
+        return ord(item) - ord("A") + 27
+    return ord(item) - ord("a") + 1
 
 
 def read_input():
