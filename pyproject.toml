@@ -6,3 +6,12 @@ disable = [
     "missing-module-docstring",
     "missing-class-docstring"
 ]
+
+good-names = [
+    "a",
+    "b",
+    "e",
+    "f",
+    "x",
+    "y"    
+]

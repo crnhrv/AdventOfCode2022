@@ -1,33 +1,26 @@
 def main(pairs, check_fn):
     total = 0
-    for (first, second) in [pair.split(",") for pair in pairs]:
+    for (a, b) in [pair.split(",") for pair in pairs]:
         total += check_fn(
-            [int(x) for x in first.split("-")], [int(x) for x in second.split("-")]
+            [int(x) for x in a.split("-")], [int(x) for x in b.split("-")]
         )
     return total
 
 
-def fully_contains(first, second):
-    return (first[0] <= second[0] and first[1] >= second[1]) or (
-        second[0] <= first[0] and second[1] >= first[1]
-    )
+def fully_contains(a, b):
+    return (a[0] <= b[0] and a[1] >= b[1]) or (b[0] <= a[0] and b[1] >= a[1])
 
 
-def overlap(first, second):
-    return not (first[1] < second[0] or first[0] > second[1])
+def overlap(a, b):
+    return not (a[1] < b[0] or a[0] > b[1])
 
 
 def read_input(filename):
-    with open(filename, encoding="utf8") as input_file:
-        data = input_file.read().splitlines()
-    return data
+    with open(filename, encoding="utf8") as f:
+        return f.read().splitlines()
 
 
 if __name__ == "__main__":
     input_ = read_input("input.txt")
-
-    ANSWER1 = main(input_, fully_contains)
-    ANSWER2 = main(input_, overlap)
-
-    print(ANSWER1)
-    print(ANSWER2)
+    print(main(input_, fully_contains))
+    print(main(input_, overlap))
