@@ -5,9 +5,6 @@ class Node(object):
         self.name = name
         self.children = []
 
-    def add_child(self, obj):
-        self.children.append(obj)
-
     def add_child_if_not_exists(self, obj):
         if not self.exists_in_children(obj):
             self.children.append(obj)
