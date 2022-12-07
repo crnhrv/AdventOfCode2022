@@ -24,10 +24,10 @@ class Node(object):
     def increase_size(self, size):
         self.size += size
 
-    def get_children(self):
+    def get_all_children(self):
         for child in self.children:
             yield child
-            yield from child.get_children()
+            yield from child.get_all_children()
 
 
 def main(data):
@@ -50,7 +50,7 @@ def main(data):
     required_space = 30000000 - unused_space
     answer1 = 0
     answer2 = root.size
-    for child in root.get_children():
+    for child in root.get_all_children():
         if child.size <= 100000:
             answer1 += child.size
         if child.size >= required_space:
@@ -82,6 +82,6 @@ def read_input(filename):
 
 if __name__ == "__main__":
     dt = read_input("input.txt")
-    (answer1, answer2) = main(dt)
-    print(answer1)
-    print(answer2)
+    (ans1, ans2) = main(dt)
+    print(ans1)
+    print(ans2)
