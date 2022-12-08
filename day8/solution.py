@@ -1,4 +1,4 @@
-def part_1(forest):
+def main(forest):
     visible_trees = set()
 
     for (i, trees) in enumerate(forest):
