@@ -15,18 +15,22 @@ def main(data):
         answer1 += register_at_cycle[cycle] * cycle
     print(answer1)
 
-    crt_position = 1
-    max_width = 40
+    print_crt(register_at_cycle)
+
+
+def print_crt(register_at_cycle):
+    crt_width = 40
     crt = [
-        ["." for _ in range(max_width)]
-        for _ in range(len(register_at_cycle) // max_width)
+        ["." for _ in range(crt_width)]
+        for _ in range(len(register_at_cycle) // crt_width)
     ]
+    crt_current_position = 1
     for (i, row) in enumerate(crt):
         for (j, _) in enumerate(row):
-            sprite_position = register_at_cycle[crt_position]
+            sprite_position = register_at_cycle[crt_current_position]
             if abs(sprite_position - j) <= 1:
                 crt[i][j] = "#"
-            crt_position += 1
+            crt_current_position += 1
             print(crt[i][j], end="")
         print("\n", end="")
 
@@ -44,5 +48,5 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("test-input2.txt")
+    dt = read_input("input.txt")
     main(dt)
