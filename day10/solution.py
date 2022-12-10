@@ -22,7 +22,7 @@ def main(data):
         for (j, _) in enumerate(row):
             sprite_position = register_at_cycle[crt_position]
             if abs(sprite_position - j) <= 1:
-                crt[i][j] = ""
+                crt[i][j] = "#"
             crt_position += 1
             print(crt[i][j], end="")
         print("\n", end="")
@@ -41,5 +41,5 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("input.txt")
+    dt = read_input("test-input2.txt")
     main(dt)
