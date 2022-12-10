@@ -17,7 +17,7 @@ def main(data):
 
     crt_position = 1
     max_width = 40
-    crt = [["." for i in range(40)] for _ in range(len(register_at_cycle) // max_width)]
+    crt = [["." for _ in range(40)] for _ in range(len(register_at_cycle) // max_width)]
     for (i, row) in enumerate(crt):
         for (j, _) in enumerate(row):
             sprite_position = register_at_cycle[crt_position]
