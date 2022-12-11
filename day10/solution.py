@@ -1,5 +1,5 @@
 def main(data):
-    register_at_cycle = dict()
+    register_at_cycle = {}
     cycle = 1
     register = 1
     for (cycle_count, to_add) in data:
