@@ -1,3 +1,6 @@
+import functools
+
+
 def main(data):
     i = 1
     ans1 = 0
@@ -6,27 +9,13 @@ def main(data):
             ans1 += i
         i += 1
     print(ans1)
-    packets = sort_packets(data)
+
+    flattened = [item for sublist in data for item in sublist]
+    packets = sorted(flattened, key=functools.cmp_to_key(compare), reverse=True)
     l_divider = packets.index([[2]]) + 1
     r_divider = packets.index([[6]]) + 1
     ans2 = l_divider * r_divider
     print(ans2)
-
-
-def sort_packets(data):
-    packets = [item for sublist in data for item in sublist]
-    unsorted = True
-    while unsorted:
-        unsorted = False
-        i = 0
-        while i < len(packets) - 1:
-            if compare(packets[i + 1], packets[i]) == 1:
-                unsorted = True
-                temp = packets[i]
-                packets[i] = packets[i + 1]
-                packets[i + 1] = temp
-            i += 1
-    return packets
 
 
 def compare(l, r):
