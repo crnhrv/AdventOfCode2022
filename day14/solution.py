@@ -40,15 +40,30 @@ def main(paths):
             min_width = min(width, min_width)
             max_height = max(height, max_height)
 
-    dimensions = CaveDimensions(max_height, max_width, min_width, min_height)
-    cave = setup_empty_cave(dimensions)
-    add_cave_walls(cave, paths)
+    dimensions = CaveDimensions(max_height, max_width, min_width, 0)
+    ans1_cave = setup_empty_cave_part_1(dimensions)
+    add_cave_walls_part1(ans1_cave, paths)
+    ans2_cave = setup_empty_cave_part_2(dimensions)
+    add_cave_walls_part2(ans2_cave, paths)
     collected = False
     while not collected:
-        (r, c) = cave.get_sand_start()
-        collected = drop_sand(cave, r, c)
+        (r, c) = ans1_cave.get_sand_start()
+        collected = drop_sand(ans1_cave, r, c)
+        time.sleep(0.1)
+        os.system("cls")
+        print_cave(ans1_cave)
 
-    print(count_collected(cave))
+    collected = False
+    prev_collected = -1
+    while not collected:
+        collected = drop_sand(ans2_cave, 0, 500)
+        grains_collected = count_collected(ans2_cave)
+        if grains_collected == prev_collected:
+            break
+        prev_collected = grains_collected
+
+    print(count_collected(ans1_cave))  # ans1
+    print(grains_collected)  # ans2
 
 
 def count_collected(cave: Cave):
@@ -79,7 +94,7 @@ def drop_sand(cave: Cave, r, c):
     return False
 
 
-def setup_empty_cave(dimensions: CaveDimensions) -> Cave:
+def setup_empty_cave_part_1(dimensions: CaveDimensions) -> Cave:
     grid = [
         ["." for _ in range(dimensions.actual_width() + 1)]
         for _ in range(dimensions.actual_height() + 1)
@@ -91,7 +106,20 @@ def setup_empty_cave(dimensions: CaveDimensions) -> Cave:
     return cave
 
 
-def add_cave_walls(cave: Cave, paths):
+def setup_empty_cave_part_2(dimensions: CaveDimensions) -> Cave:
+    grid = [
+        ["." for _ in range(dimensions.max_width * 2)]
+        for _ in range(dimensions.max_height + 3)
+    ]
+
+    cave = Cave(dimensions, grid)
+    (r, c) = cave.get_sand_start()
+    cave.grid[r][c] = "+"
+    cave.grid[-1] = ["#" for _ in grid[-1]]
+    return cave
+
+
+def add_cave_walls_part1(cave: Cave, paths):
     for line in paths:
         for (i, coords) in enumerate(line[1:]):
             (start_col, start_row) = line[(i + 1) - 1]
@@ -117,6 +145,17 @@ def add_cave_walls(cave: Cave, paths):
                 add_walls_vertically(
                     cave, vertical_start, vertical_end, horizontal_start
                 )
+
+
+def add_cave_walls_part2(cave: Cave, paths):
+    for line in paths:
+        for (i, coords) in enumerate(line[1:]):
+            (start_col, start_row) = line[(i + 1) - 1]
+            (end_col, end_row) = coords
+            if start_col != end_col:
+                add_walls_horizontally(cave, start_col, end_col, start_row)
+            else:
+                add_walls_vertically(cave, start_row, end_row, start_col)
 
 
 def add_walls_horizontally(cave, horizontal_start, horizontal_end, r):
@@ -160,5 +199,5 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("input.txt")
+    dt = read_input("test-input.txt")
     main(dt)
