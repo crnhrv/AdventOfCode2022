@@ -67,10 +67,10 @@ def is_surface_cube(cube, minmaxes, all_cubes, deltas):
         if (
             x < minmaxes[0][0]
             or x > minmaxes[0][1]
-            or x < minmaxes[1][0]
-            or x > minmaxes[1][1]
-            or x < minmaxes[2][0]
-            or x > minmaxes[2][1]
+            or y < minmaxes[1][0]
+            or y > minmaxes[1][1]
+            or z < minmaxes[2][0]
+            or z > minmaxes[2][1]
         ):
             return True
         if (x, y, z) not in all_cubes:
