@@ -7,12 +7,29 @@ class Cave:
         self.starting_depth = 4
         self.rock_spawn = 0
         self.rock_count = 0
+        self.cached_state = {}
 
     def build(self):
         self.grid = [
             ["." for _ in range(self.width)] for _ in range(self.starting_depth)
         ]
         return self
+
+    def save_to_cache(self):
+        highest_blocks_per_col = set()
+        for col in range(self.width):
+            row = 0
+            while row < len(self.grid):
+                if self.grid[row][col] == "#":
+                    highest_blocks_per_col.add((row, col))
+                    break
+                row += 1
+        highest_blocks_per_col.add((1000 + self.rock_index, 1000 + self.jet_index))
+        key = frozenset(highest_blocks_per_col)
+        if key in self.cached_state:
+            self.cached_state[key].append([self.rock_count, len(self.grid) - 4])
+        else:
+            self.cached_state[key] = [[self.rock_count, len(self.grid) - 4]]
 
 
 class Rock:
@@ -41,6 +58,7 @@ def drop_rocks(jets, search_range, cave=None):
     if not cave:
         cave = Cave().build()
     while cave.rock_count < search_range:
+        cave.save_to_cache()
         rock = spawn_rock(rocks[cave.rock_index], cave.rock_spawn, 2)
         rock_is_moving = True
         while rock_is_moving:
@@ -55,6 +73,33 @@ def drop_rocks(jets, search_range, cave=None):
             add_depth_to_cave(cave, abs(tl_edge[0] - 4), cave.width)
 
     return cave
+
+
+def find_pattern(jets):
+    cave = drop_rocks(jets, 200_000)
+    for (_, value) in cave.cached_state.items():
+        if len(value) > 1:
+            break
+
+    start_rock_count = value[0][0]
+    pattern_length = value[1][0] - value[0][0]
+    (pattern_amount, remainder) = divmod(
+        1_000_000_000_000 - start_rock_count, pattern_length
+    )
+
+    height_before_start = len(drop_rocks(jets, start_rock_count).grid) - 4
+    height_including_remainder = (
+        len(drop_rocks(jets, start_rock_count + remainder).grid) - 4
+    )
+
+    ans2 = height_before_start
+
+    pattern_height = value[1][1] - value[0][1]
+    ans2 += pattern_amount * pattern_height + (
+        height_including_remainder - height_before_start
+    )
+
+    print(ans2)
 
 
 def add_depth_to_cave(cave: list[list[str]], extra_depth, width):
@@ -316,5 +361,6 @@ def print_cave(cave):
 
 
 if __name__ == "__main__":
-    dt = read_input("test-input.txt")
+    dt = read_input("input.txt")
     print(len(drop_rocks(dt, 20000).grid) - 4)  # ans1
+    find_pattern(dt)
