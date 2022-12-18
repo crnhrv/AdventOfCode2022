@@ -1,5 +1,5 @@
 def main(cubes: list[tuple[int, int, int]]):
-    total = 6 * len(cubes)
+    ans1 = 6 * len(cubes)
     for (i, cube_a) in enumerate(cubes):
         for cube_b in cubes[i + 1 :]:
             if (
@@ -8,23 +8,23 @@ def main(cubes: list[tuple[int, int, int]]):
                 + abs(cube_a[2] - cube_b[2])
                 == 1
             ):
-                total -= 2
+                ans1 -= 2
 
-    print(total)
+    print(ans1)
 
     all_cubes = set(cubes)
     deltas = [(0, 0, 1), (0, 0, -1), (0, 1, 0), (0, -1, 0), (1, 0, 0), (-1, 0, 0)]
     min_x_cube = min(cubes, key=lambda x: x[0])
     max_x_cube = max(cubes, key=lambda x: x[0])
-    ans = 0
+    ans2 = 0
     for cube in cubes:
         for delta in deltas:
             test_cube = (cube[0] + delta[0], cube[1] + delta[1], cube[2] + delta[2])
             if is_surface_cube(
                 test_cube, (min_x_cube[0], max_x_cube[0]), all_cubes, deltas
             ):
-                ans += 1
-    print(ans)
+                ans2 += 1
+    print(ans2)
 
 
 def is_surface_cube(cube, minmax, all_cubes, deltas):
