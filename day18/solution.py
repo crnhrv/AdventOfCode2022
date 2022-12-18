@@ -1,61 +1,33 @@
-class Cube:
-    def __init__(self, x, y, z) -> None:
-        self.x = x
-        self.y = y
-        self.z = z
-
-    def __str__(self) -> str:
-        return f"({self.x},{self.y},{self.z})"
-
-    def __eq__(self, other) -> bool:
-        return self.x == other.x and self.y == other.y and self.z == other.z
-
-    def __repr__(self) -> str:
-        return f"{self}"
-
-
-def main(cubes: list[Cube]):
+def main(cubes: list[tuple[int, int, int]]):
     total = 6 * len(cubes)
     for (i, cube_a) in enumerate(cubes):
         for cube_b in cubes[i + 1 :]:
             if (
-                abs(cube_a.x - cube_b.x)
-                + abs(cube_a.y - cube_b.y)
-                + abs(cube_a.z - cube_b.z)
+                abs(cube_a[0] - cube_b[0])
+                + abs(cube_a[1] - cube_b[1])
+                + abs(cube_a[2] - cube_b[2])
                 == 1
             ):
                 total -= 2
 
     print(total)
 
-    min_x_cube = min(cubes, key=lambda x: x.x)
-    max_x_cube = max(cubes, key=lambda x: x.x)
-
-    min_y_cube = min(cubes, key=lambda x: x.y)
-    max_y_cube = max(cubes, key=lambda x: x.y)
-
-    min_z_cube = min(cubes, key=lambda x: x.z)
-    max_z_cube = max(cubes, key=lambda x: x.z)
-
-    minmaxes = (
-        (min_x_cube.x, max_x_cube.x),
-        (min_y_cube.y, max_y_cube.y),
-        (min_z_cube.z, max_z_cube.z),
-    )
-
+    all_cubes = set(cubes)
     deltas = [(0, 0, 1), (0, 0, -1), (0, 1, 0), (0, -1, 0), (1, 0, 0), (-1, 0, 0)]
-
-    all_cubes = set([(x.x, x.y, x.z) for x in cubes])
+    min_x_cube = min(cubes, key=lambda x: x[0])
+    max_x_cube = max(cubes, key=lambda x: x[0])
     ans = 0
     for cube in cubes:
         for delta in deltas:
-            test_cube = (cube.x + delta[0], cube.y + delta[1], cube.z + delta[2])
-            if is_surface_cube(test_cube, minmaxes, all_cubes, deltas):
+            test_cube = (cube[0] + delta[0], cube[1] + delta[1], cube[2] + delta[2])
+            if is_surface_cube(
+                test_cube, (min_x_cube[0], max_x_cube[0]), all_cubes, deltas
+            ):
                 ans += 1
     print(ans)
 
 
-def is_surface_cube(cube, minmaxes, all_cubes, deltas):
+def is_surface_cube(cube, minmax, all_cubes, deltas):
     (x, y, z) = cube
     seen = set()
     stack = [(x, y, z)]
@@ -64,14 +36,7 @@ def is_surface_cube(cube, minmaxes, all_cubes, deltas):
         if (x, y, z) in seen:
             continue
         seen.add((x, y, z))
-        if (
-            x < minmaxes[0][0]
-            or x > minmaxes[0][1]
-            or y < minmaxes[1][0]
-            or y > minmaxes[1][1]
-            or z < minmaxes[2][0]
-            or z > minmaxes[2][1]
-        ):
+        if x < minmax[0] or x > minmax[1]:
             return True
         if (x, y, z) not in all_cubes:
             for delta in deltas:
@@ -87,7 +52,7 @@ def read_input(filename):
         cubes_coords = f.read().splitlines()
         for coords in cubes_coords:
             (x, y, z) = [int(x) for x in coords.split(",")]
-            cubes.append(Cube(x, y, z))
+            cubes.append((x, y, z))
     return cubes
 
 
