@@ -6,10 +6,6 @@ def main(valves: dict[str, tuple[int, list[str]]]):
     while minutes <= 30:
         ans1 += current_flow
         best_option = calculate_best_option(valves, current_position)
-        if best_option[0]:
-            best_option = calculate_best_option(
-                valves, current_position, inflate_scores=True
-            )
         if current_position == best_option:
             valve_flow = valves[current_position][0]
             current_flow += valve_flow
@@ -20,12 +16,11 @@ def main(valves: dict[str, tuple[int, list[str]]]):
     print(ans1)
 
 
-def calculate_best_option(valves, current_position, inflate_scores=False):
-    if inflate_scores:
-        valves = dict([kvp for kvp in valves.items()])
-        for key in valves.keys():
-            valve = valves[key]
-            valves[key] = (valve[0] * 1000, valve[1])
+def calculate_best_option(valves, current_position):
+    valves = dict([kvp for kvp in valves.items()])
+    for key in valves.keys():
+        valve = valves[key]
+        valves[key] = (valve[0] * 1000, valve[1])
 
     ranking = naive_ranking(current_position, valves, 1, {}, set())
     best_option = max(ranking.items(), key=lambda x: x[1])
@@ -97,5 +92,5 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("input.txt")
+    dt = read_input("test-input.txt")
     main(dt)
