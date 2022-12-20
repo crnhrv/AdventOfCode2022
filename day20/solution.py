@@ -20,7 +20,7 @@ def mix(data: list[int], ordering):
 
 def shift(data: list[int], shift_by):
     index = data.index(shift_by)
-    _ = data.pop(index)
+    data.remove(shift_by)
     new_index = (index + shift_by[1]) % len(data)
     data.insert(new_index, shift_by)
 
