@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import math
 
 
 @dataclass
@@ -33,7 +32,9 @@ def p1(blueprints):
     id = 1
     ans1 = 0
     for blueprint in blueprints:
-        ans1 += id * get_max_blueprint_score(blueprint, 24)
+        geo = get_max_blueprint_score(blueprint, 24)
+        print(f"blueprint {id}: {geo}")
+        ans1 += id * geo
         id += 1
     print(ans1)
 
@@ -41,8 +42,9 @@ def p1(blueprints):
 def p2(blueprints):
     ans2 = 1
     for blueprint in blueprints:
-        ans2 *= get_max_blueprint_score(blueprint, 32)
-        print(ans2)
+        geo = get_max_blueprint_score(blueprint, 32)
+        print(geo)
+        ans2 *= geo
     print(ans2)
 
 
@@ -64,7 +66,6 @@ def get_max_blueprint_score(blueprint: Blueprint, mins):
         max_clay,
         max_obs,
         mins,
-        False,
     )
     return state[mins]
 
@@ -80,9 +81,13 @@ def find_best_option(
     max_clay,
     max_obs,
     max_mins,
-    built_something_previously,
 ):
-    if minute > max_mins:
+    if minute in state:
+        state[minute] = max(state[minute], collected[3])
+    else:
+        state[minute] = collected[3]
+
+    if minute >= max_mins:
         return
     key = (
         minute,
@@ -99,15 +104,13 @@ def find_best_option(
         return
     seen.add(key)
 
-    if minute in state:
-        state[minute] = max(state[minute], collected[3])
-    else:
-        state[minute] = collected[3]
+    built_geode = False
+    can_afford_something = False
+    for robot in blueprint.robots():
+        can_afford_something = can_afford(collected, robot)
 
-    built_geo = False
-    built_anything = False
     for (i, robot) in enumerate(blueprint.robots()):
-        if built_geo:
+        if built_geode:
             return
         if robot.type == "ore" and collection_rate[0] >= max_ore:
             continue
@@ -116,24 +119,10 @@ def find_best_option(
         if robot.type == "obs" and collection_rate[2] >= max_obs:
             continue
         if can_afford(collected, robot):
-            if not built_something_previously:
-                old_collected = [
-                    collected[0] - collection_rate[0],
-                    collected[1] - collection_rate[1],
-                    collected[2] - collection_rate[2],
-                    collected[3] - collection_rate[3],
-                ]
-                if can_afford(old_collected, robot):
-                    return
-
             new_collected = make_robot(collected[:], robot)
             new_collection_rate = collection_rate[:]
             new_collection_rate[3 - i] += 1
             new_collected = collect_ore(new_collected, collection_rate)
-            if robot.type == "geo":
-                built_geo = True
-            else:
-                built_anything = True
             find_best_option(
                 blueprint,
                 new_collected,
@@ -145,23 +134,24 @@ def find_best_option(
                 max_clay,
                 max_obs,
                 max_mins,
-                True,
             )
-        elif not built_anything:
-            new_collected = collect_ore(collected[:], collection_rate)
-            find_best_option(
-                blueprint,
-                new_collected,
-                collection_rate,
-                minute + 1,
-                state,
-                seen,
-                max_ore,
-                max_clay,
-                max_obs,
-                max_mins,
-                False,
-            )
+            if robot.type == "geo":
+                built_geode = True
+
+    if not can_afford_something:
+        new_collected = collect_ore(collected[:], collection_rate)
+        return find_best_option(
+            blueprint,
+            new_collected,
+            collection_rate,
+            minute + 1,
+            state,
+            seen,
+            max_ore,
+            max_clay,
+            max_obs,
+            max_mins,
+        )
 
     return
 
