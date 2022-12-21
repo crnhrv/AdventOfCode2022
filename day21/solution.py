@@ -5,12 +5,17 @@ def p1(monkeys):
 def p2(monkeys: dict, max_possible):
     (lmonkey, _, rmonkey) = monkeys["root"].split(" ")
     target = get_true_monkey_value(monkeys.copy(), rmonkey)
-    bin_search_monkeys(
+    search_start = bin_search_monkeys(
         monkeys,
         max_possible,
         lmonkey,
         target,
     )
+    for num in range(search_start - 1, max_possible):
+        monkeys["humn"] = num
+        value = get_true_monkey_value(monkeys.copy(), lmonkey)
+        if value == target:
+            return num
 
 
 def get_true_monkey_value(monkeys: dict, monkey):
@@ -28,20 +33,16 @@ def bin_search_monkeys(monkeys, max_num, lmonkey, search_val):
         if score < 0:
             low = mid
         elif score == 0:
-            print(mid)
-            break
+            return mid
         else:
-            high = mid
+            high = mid - 1
+    return mid
 
 
 def recurse_until_value(monkeys, equation):
     if isinstance(equation, int):
         return equation
-    if isinstance(equation, float):
-        return equation
     equation_parts = equation.split(" ")
-    if len(equation_parts) == 1:
-        return int(equation)
     new_equation = []
     for part in equation_parts:
         if part in monkeys:
@@ -68,9 +69,9 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    p1_data = read_input("input.txt")
+    p1_data = read_input("test-input.txt")
     ans1 = p1(p1_data)
     print(ans1)
-    p2_data = read_input("input.txt")
+    p2_data = read_input("test-input.txt")
     ans2 = p2(p2_data, ans1 * 2)
     print(ans2)
