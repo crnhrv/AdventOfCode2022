@@ -33,19 +33,22 @@ def p1(blueprints):
     ans1 = 0
     for blueprint in blueprints:
         geo = get_max_blueprint_score(blueprint, 24)
-        print(f"blueprint {id}: {geo}")
+        print(f"blueprint {id}: cracked {geo}")
         ans1 += id * geo
         id += 1
-    print(ans1)
+    print(f"answer 1: {ans1}")
+    print("------------------------------------")
 
 
 def p2(blueprints):
     ans2 = 1
+    id = 1
     for blueprint in blueprints:
         geo = get_max_blueprint_score(blueprint, 32)
-        print(geo)
+        print(f"blueprint {id}: cracked {geo}")
         ans2 *= geo
-    print(ans2)
+        id += 1
+    print(f"answer 2: {ans2}")
 
 
 def get_max_blueprint_score(blueprint: Blueprint, mins):
