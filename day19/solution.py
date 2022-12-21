@@ -64,8 +64,10 @@ def get_max_blueprint_score(blueprint: Blueprint, mins):
         max_clay,
         max_obs,
         mins,
+        False,
     )
-    return state[24][-1]
+    print(state)
+    return state[mins]
 
 
 def find_best_option(
@@ -79,6 +81,7 @@ def find_best_option(
     max_clay,
     max_obs,
     max_mins,
+    built_something_previously,
 ):
     if minute > max_mins:
         return
@@ -97,23 +100,13 @@ def find_best_option(
         return
     seen.add(key)
 
-    if minute not in state:
-        state[minute] = collected
+    if minute in state:
+        state[minute] = max(state[minute], collected[3])
     else:
-        state[minute] = [
-            max(collected[0], state[minute][0]),
-            max(collected[1], state[minute][1]),
-            max(collected[2], state[minute][2]),
-            max(collected[3], state[minute][3]),
-        ]
-
-    time_left = max_mins - minute
-    max_possible_geodes = collected[3]
-    max_possible_geodes += sum([collection_rate[3] + i for i in range(1, time_left)])
-    if max_possible_geodes < state[minute][3]:
-        return
+        state[minute] = collected[3]
 
     built_geo = False
+    built_anything = False
     for (i, robot) in enumerate(blueprint.robots()):
         if built_geo:
             return
@@ -124,12 +117,24 @@ def find_best_option(
         if robot.type == "obs" and collection_rate[2] >= max_obs:
             continue
         if can_afford(collected, robot):
+            if not built_something_previously:
+                old_collected = [
+                    collected[0] - collection_rate[0],
+                    collected[1] - collection_rate[1],
+                    collected[2] - collection_rate[2],
+                    collected[3] - collection_rate[3],
+                ]
+                if can_afford(old_collected, robot):
+                    return
+
             new_collected = make_robot(collected[:], robot)
             new_collection_rate = collection_rate[:]
             new_collection_rate[3 - i] += 1
             new_collected = collect_ore(new_collected, collection_rate)
             if robot.type == "geo":
                 built_geo = True
+            else:
+                built_anything = True
             find_best_option(
                 blueprint,
                 new_collected,
@@ -141,8 +146,9 @@ def find_best_option(
                 max_clay,
                 max_obs,
                 max_mins,
+                True,
             )
-        else:
+        elif not built_anything:
             new_collected = collect_ore(collected[:], collection_rate)
             find_best_option(
                 blueprint,
@@ -155,6 +161,7 @@ def find_best_option(
                 max_clay,
                 max_obs,
                 max_mins,
+                False,
             )
 
     return
@@ -216,6 +223,6 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("test-input.txt")
+    dt = read_input("input.txt")
     p1(dt[:])
     p2(dt[:3])
