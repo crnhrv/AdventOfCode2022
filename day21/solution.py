@@ -1,18 +1,21 @@
-def p1(monkeys: dict):
-    monkeys["root"] = recurse_until_value(monkeys, monkeys["root"])
-    return int(monkeys["root"])
+def p1(monkeys):
+    return get_true_monkey_value(monkeys.copy(), "root")
 
 
 def p2(monkeys: dict, max_possible):
-    target_monkeys = monkeys.copy()
-    p1(target_monkeys)
     (lmonkey, _, rmonkey) = monkeys["root"].split(" ")
+    target = get_true_monkey_value(monkeys.copy(), rmonkey)
     bin_search_monkeys(
         monkeys,
         max_possible,
         lmonkey,
-        target_monkeys[rmonkey],
+        target,
     )
+
+
+def get_true_monkey_value(monkeys: dict, monkey):
+    monkeys[monkey] = recurse_until_value(monkeys, monkeys[monkey])
+    return int(monkeys[monkey])
 
 
 def bin_search_monkeys(monkeys, max_num, lmonkey, search_val):
@@ -20,7 +23,8 @@ def bin_search_monkeys(monkeys, max_num, lmonkey, search_val):
     high = max_num
     while low < high:
         mid = (low + high) // 2
-        score = search_val - get_left_monkey_val(monkeys.copy(), lmonkey, mid)
+        monkeys["humn"] = mid
+        score = search_val - get_true_monkey_value(monkeys.copy(), lmonkey)
         if score < 0:
             low = mid
         elif score == 0:
@@ -28,13 +32,6 @@ def bin_search_monkeys(monkeys, max_num, lmonkey, search_val):
             break
         else:
             high = mid
-
-
-def get_left_monkey_val(monkeys, lmonkey, humn_number):
-    monkeys["root"] = monkeys["root"].replace("+", "==")
-    monkeys["humn"] = humn_number
-    monkeys["root"] = recurse_until_value(monkeys, monkeys["root"])
-    return monkeys[lmonkey]
 
 
 def recurse_until_value(monkeys, equation):
