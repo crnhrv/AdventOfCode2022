@@ -66,7 +66,6 @@ def get_max_blueprint_score(blueprint: Blueprint, mins):
         mins,
         False,
     )
-    print(state)
     return state[mins]
 
 
