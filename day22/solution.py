@@ -123,7 +123,7 @@ def find_connecting_tile_large_cube(
     current_cube: int, cubes, current_tile: tuple[int, int], direction: int
 ):
     match current_cube:
-        case 0:  # verified
+        case 0:
             match direction:
                 case CardinalDirections.West:
                     new_cube = cubes[3]
@@ -135,7 +135,7 @@ def find_connecting_tile_large_cube(
                     return get_north_east_connection(
                         current_tile, new_cube, cubes[current_cube]
                     )
-        case 1:  # verified
+        case 1:
             match direction:
                 case CardinalDirections.East:
                     new_cube = cubes[4]
@@ -152,7 +152,7 @@ def find_connecting_tile_large_cube(
                     return get_south_west_connection(
                         current_tile, new_cube, cubes[current_cube]
                     )
-        case 2:  # veriofied
+        case 2:
             match direction:
                 case CardinalDirections.East:
                     new_cube = cubes[1]
@@ -164,7 +164,7 @@ def find_connecting_tile_large_cube(
                     return get_west_south_connection(
                         current_tile, new_cube, cubes[current_cube]
                     )
-        case 3:  # veriofied
+        case 3:
             match direction:
                 case CardinalDirections.West:
                     new_cube = cubes[0]
@@ -176,7 +176,7 @@ def find_connecting_tile_large_cube(
                     return get_north_east_connection(
                         current_tile, new_cube, cubes[current_cube]
                     )
-        case 4:  # verified
+        case 4:
             match direction:
                 case CardinalDirections.East:
                     new_cube = cubes[1]
@@ -227,7 +227,7 @@ def get_north_east_connection(
     top_of_current = get_top_row(current_cube)
     leftmost_of_next = get_bottom_column(new_cube)
     return (
-        match_tiles(top_of_current, leftmost_of_next, current_tile),  # verified both
+        match_tiles(top_of_current, leftmost_of_next, current_tile),
         CardinalDirections.East,
     )
 
@@ -238,7 +238,7 @@ def get_south_west_connection(
     bottom_of_current = get_bottom_row(current_cube)
     rightmost_of_next = get_top_column(new_cube)
     return (
-        match_tiles(bottom_of_current, rightmost_of_next, current_tile),  # verified
+        match_tiles(bottom_of_current, rightmost_of_next, current_tile),
         CardinalDirections.West,
     )
 
@@ -249,9 +249,7 @@ def get_east_north_connection(
     rightmost_of_current = get_top_column(current_cube)
     bottom_of_next = get_bottom_row(new_cube)
     return (
-        match_tiles(
-            rightmost_of_current, bottom_of_next, current_tile
-        ),  # both verified
+        match_tiles(rightmost_of_current, bottom_of_next, current_tile),
         CardinalDirections.North,
     )
 
@@ -262,9 +260,7 @@ def get_west_east_connection(
     leftmost_of_current = get_bottom_column(current_cube)
     leftmost_of_next = get_bottom_column(new_cube)
     return (
-        invert_tiles(
-            leftmost_of_current, leftmost_of_next, current_tile
-        ),  # verified both
+        invert_tiles(leftmost_of_current, leftmost_of_next, current_tile),
         CardinalDirections.East,
     )
 
@@ -275,9 +271,7 @@ def get_east_west_connection(
     rightmost_of_current = get_top_column(current_cube)
     rightmost_of_next = get_top_column(new_cube)
     return (
-        invert_tiles(
-            rightmost_of_current, rightmost_of_next, current_tile
-        ),  # both verified
+        invert_tiles(rightmost_of_current, rightmost_of_next, current_tile),
         CardinalDirections.West,
     )
 
@@ -288,7 +282,7 @@ def get_north_north_connection(
     top_of_current = get_top_row(current_cube)
     bottom_of_next = get_bottom_row(new_cube)
     return (
-        match_tiles(top_of_current, bottom_of_next, current_tile),  # verified
+        match_tiles(top_of_current, bottom_of_next, current_tile),
         CardinalDirections.North,
     )
 
@@ -310,7 +304,7 @@ def get_west_south_connection(
     leftmost_of_current = get_bottom_column(current_cube)
     top_of_next = get_top_row(new_cube)
     return (
-        match_tiles(leftmost_of_current, top_of_next, current_tile),  # both verified
+        match_tiles(leftmost_of_current, top_of_next, current_tile),
         CardinalDirections.South,
     )
 
