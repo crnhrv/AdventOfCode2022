@@ -38,6 +38,7 @@ def main(elves, rounds, find_last_round):
                     new_elf = get_new_elf_pos(elf, cardinal_directions[0])
                     proposed[new_elf].append(elf)
                     break
+
         no_elf_moved = True
         for (proposition, proposing_elves) in proposed.items():
             if len(proposing_elves) > 1:
@@ -55,8 +56,10 @@ def main(elves, rounds, find_last_round):
         if no_elf_moved and find_last_round:
             print(total_rounds)  # ans2
             exit(0)
+
         first_direction = directions.pop(0)
         directions.append(first_direction)
+
         rounds -= 1
         total_rounds += 1
     count = 0
