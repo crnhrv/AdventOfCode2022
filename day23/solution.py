@@ -53,13 +53,12 @@ def main(elves, rounds, find_last_round):
             elves.add(new_elf)
 
         if no_elf_moved and find_last_round:
-            print(total_rounds)
+            print(total_rounds)  # ans2
             exit(0)
         first_direction = directions.pop(0)
         directions.append(first_direction)
         rounds -= 1
         total_rounds += 1
-    print(abs(max_n - max_s) * abs(max_w - max_e) - len(elves))
     count = 0
     for y in range(max_n, max_s + 1):
         for x in range(max_w, max_e + 1):
@@ -69,7 +68,7 @@ def main(elves, rounds, find_last_round):
                 count += 1
                 print(".", end="")
         print()
-    print(count)
+    print(count)  # ans1
 
 
 def get_new_elf_pos(elf, direction):
