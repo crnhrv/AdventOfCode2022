@@ -109,7 +109,6 @@ def get_max_blueprint_score(data, mins):
         )
 
     ans2 = 0
-    stack = [x for x in stack]
     while stack:
         elephant_score = 0
         (human_score, opened_valves) = stack.pop()
