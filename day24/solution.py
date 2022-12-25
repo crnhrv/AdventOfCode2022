@@ -74,11 +74,11 @@ def move(position, direction):
 def move_blizzard(position, direction, max_x, max_y):
     new_pos = move(position, direction)
     if new_pos[0] < 1:
-        return (max_x + 1, new_pos[1])
+        return (max_x, new_pos[1])
     if new_pos[0] > max_x:
         return (1, new_pos[1])
     if new_pos[1] < 1:
-        return (new_pos[0], max_y - 2)
+        return (new_pos[0], max_y)
     if new_pos[1] > max_y:
         return (new_pos[0], 1)
     return new_pos
@@ -109,6 +109,9 @@ def read_input(filename):
                     direction = Directions.convert_direction(spot)
                     blizzards.append(((x, y), direction))
                     available_spots.add((x, y))
+        print(blizzards)
+        print(walls)
+        print(available_spots)
 
     return (starting_spot, ending_spot, available_spots, walls, blizzards)
 
