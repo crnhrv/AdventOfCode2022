@@ -19,50 +19,59 @@ class Directions:
                 return Directions.D
 
 
-def main(data):
+def main(data, p2):
     (current_position, ending_spot, walls, blizzards) = data
     directions = [Directions.U, Directions.L, Directions.D, Directions.R]
     max_x = max(w[0] for w in walls) - 1
     max_y = max(w[1] for w in walls) - 2
     minutes = 0
-    positions = [(current_position, minutes)]
-    quickest = float("inf")
-    stack = collections.deque(positions)
     blizzard_cache = {}
     seen = set()
-
-    while stack:
-        (current_position, minutes) = stack.popleft()
-        if minutes > quickest:
-            continue
-        if current_position == ending_spot:
-            quickest = min(minutes, quickest)
-            continue
-
-        if minutes in blizzard_cache:
-            current_blizzards = blizzard_cache[minutes]
+    if p2:
+        journey = 4
+    else:
+        journey = 2
+    quickest = float("inf")
+    for trip in range(1, journey):
+        if trip == 1:
+            starting_position = current_position
+            ending_spot = ending_spot
         else:
-            new_blizzards = []
-            for (blizzard, direction) in blizzards.copy():
-                new_bpos = move_blizzard(blizzard, direction, max_x, max_y)
-                new_blizzards.append((new_bpos, direction))
-            blizzards = new_blizzards
-            current_blizzards = set((x[0] for x in blizzards))
-            blizzard_cache[minutes] = current_blizzards
+            starting_position, ending_spot = ending_spot, starting_position
+        quickest = float("inf")
+        stack = collections.deque([(starting_position, minutes)])
+        while stack:
+            (current_position, minutes) = stack.popleft()
+            if minutes > quickest:
+                continue
+            if current_position == ending_spot:
+                quickest = min(minutes, quickest)
+                continue
 
-        key = (current_position, minutes)
-        if key in seen:
-            continue
-        seen.add(key)
+            if minutes in blizzard_cache:
+                current_blizzards = blizzard_cache[minutes]
+            else:
+                new_blizzards = []
+                for (blizzard, direction) in blizzards.copy():
+                    new_bpos = move_blizzard(blizzard, direction, max_x, max_y)
+                    new_blizzards.append((new_bpos, direction))
+                blizzards = new_blizzards
+                current_blizzards = set((x[0] for x in blizzards))
+                blizzard_cache[minutes] = current_blizzards
 
-        potentials = set(
-            [move(current_position, direction) for direction in directions]
-        )
-        potentials.add(current_position)
+            key = (current_position, minutes)
+            if key in seen:
+                continue
+            seen.add(key)
 
-        new_locations = potentials - current_blizzards - walls
-        for new_location in new_locations:
-            stack.append((new_location, minutes + 1))
+            potentials = set(
+                [move(current_position, direction) for direction in directions]
+            )
+            potentials.add(current_position)
+
+            new_locations = potentials - current_blizzards - walls
+            for new_location in new_locations:
+                stack.append((new_location, minutes + 1))
     print(quickest)
 
 
@@ -112,5 +121,7 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("input.txt")
-    main(dt)
+    dt1 = read_input("input.txt")
+    main(dt1, False)
+    dt2 = read_input("input.txt")
+    main(dt2, True)
