@@ -20,7 +20,7 @@ class Directions:
 
 
 def main(data):
-    (current_position, ending_spot, _, walls, blizzards) = data
+    (current_position, ending_spot, walls, blizzards) = data
     directions = [Directions.U, Directions.L, Directions.D, Directions.R]
     max_x = max(w[0] for w in walls) - 1
     max_y = max(w[1] for w in walls) - 2
@@ -49,21 +49,20 @@ def main(data):
             blizzards = new_blizzards
             current_blizzards = set((x[0] for x in blizzards))
             blizzard_cache[minutes] = current_blizzards
+
         key = (current_position, minutes)
         if key in seen:
             continue
         seen.add(key)
+
         potentials = set(
             [move(current_position, direction) for direction in directions]
         )
-        new_locations = potentials - current_blizzards - walls
+        potentials.add(current_position)
 
+        new_locations = potentials - current_blizzards - walls
         for new_location in new_locations:
             stack.append((new_location, minutes + 1))
-
-        if not new_locations:
-            stack.append((current_position, minutes + 1))
-
     print(quickest)
 
 
@@ -109,11 +108,7 @@ def read_input(filename):
                     direction = Directions.convert_direction(spot)
                     blizzards.append(((x, y), direction))
                     available_spots.add((x, y))
-        print(blizzards)
-        print(walls)
-        print(available_spots)
-
-    return (starting_spot, ending_spot, available_spots, walls, blizzards)
+    return (starting_spot, ending_spot, walls, blizzards)
 
 
 if __name__ == "__main__":
