@@ -19,7 +19,6 @@ def main(data, base):
     snafu_number = 0
     snafu_digits = []
     while max_place > -1:
-        print(total_real_number, snafu_number, max_place)
         if snafu_number == total_real_number:
             snafu_digits.append("0")
         elif snafu_number > total_real_number:
