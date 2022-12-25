@@ -15,18 +15,24 @@ def get_max_blueprint_score(data, mins):
     minute = 0
     valves = data
 
-    def find_max_score(
+    stack = []
+
+    def find_score(
         minute,
         tunnel,
         pressure_released,
         current_flow,
         opened_valves,
         max_mins,
-        visited_count,
         seen,
+        stack_phase,
     ):
         if minute > max_mins:
-            return pressure_released
+            if stack_phase:
+                stack.append((pressure_released, opened_valves))
+                return pressure_released
+            else:
+                return pressure_released
 
         key = (
             minute,
@@ -36,12 +42,6 @@ def get_max_blueprint_score(data, mins):
         if key in seen:
             return 0
 
-        if minute > 3 and current_flow == 0:
-            return 0
-
-        if visited_count[tunnel] > 2:
-            return 0
-
         seen.add(key)
 
         best = pressure_released
@@ -49,46 +49,86 @@ def get_max_blueprint_score(data, mins):
         valve = valves[tunnel]
         available_tunnels = valve[1]
 
+        best = 0
+
         if tunnel not in opened_valves and valve[0] > 0:
             new_opened_valves = opened_valves.copy()
             new_opened_valves.add(tunnel)
             best = max(
-                find_max_score(
+                find_score(
                     minute + 1,
                     tunnel,
                     pressure_released + current_flow,
                     current_flow + valve[0],
                     new_opened_valves,
                     max_mins,
-                    visited_count,
                     seen,
+                    stack_phase,
                 ),
                 best,
             )
 
         for tunnel in available_tunnels:
-            new_visited_count = visited_count.copy()
-            new_visited_count[tunnel] += 1
             best = max(
-                find_max_score(
+                find_score(
                     minute + 1,
                     tunnel,
                     pressure_released + current_flow,
                     current_flow,
                     opened_valves,
                     max_mins,
-                    new_visited_count,
                     seen,
+                    stack_phase,
                 ),
                 best,
             )
 
         return best
 
-    best_score = find_max_score(
-        minute + 1, "AA", 0, 0, set(), mins, collections.defaultdict(int), set()
-    )
-    return best_score
+    if mins == 30:
+        return find_score(
+            1,
+            "AA",
+            0,
+            0,
+            set(),
+            mins,
+            set(),
+            False,
+        )
+    else:
+        find_score(
+            1,
+            "AA",
+            0,
+            0,
+            set(),
+            mins,
+            set(),
+            True,
+        )
+
+    ans2 = 0
+    stack = [x for x in stack]
+    while stack:
+        elephant_score = 0
+        (human_score, opened_valves) = stack.pop()
+        if human_score * 2 < ans2:
+            continue
+        elephant_score = find_score(
+            1,
+            "AA",
+            0,
+            0,
+            opened_valves.copy(),
+            mins,
+            set(),
+            False,
+        )
+        if elephant_score + human_score > ans2:
+            ans2 = elephant_score + human_score
+
+    return ans2
 
 
 def read_input(filename):
@@ -107,5 +147,7 @@ def read_input(filename):
 
 
 if __name__ == "__main__":
-    dt = read_input("input.txt")
-    p1(dt)
+    pt1_dt = read_input("input.txt")
+    p1(pt1_dt)
+    pt2_dt = read_input("input.txt")
+    p2(pt2_dt)
