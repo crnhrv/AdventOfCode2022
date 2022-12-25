@@ -30,10 +30,8 @@ def get_max_blueprint_score(data, mins):
 
         key = (
             minute,
-            tunnel,
-            pressure_released,
             current_flow,
-            tuple(opened_valves),
+            tunnel,
         )
         if key in seen:
             return 0
